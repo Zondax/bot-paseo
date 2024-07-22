@@ -56,7 +56,7 @@ export async function slashAccount(): Promise<void> {
     for (const [from, amount] of filteredBalancesArray) {
       await forceTransfer(api, keypair, { from, amount })
     }
-  } else {
+  } else if (filteredBalancesArray.length > 0) {
     await forceTransferBatch(
       api,
       keypair,
