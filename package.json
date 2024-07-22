@@ -17,18 +17,18 @@
     "build-docker": "earthly build +all"
   },
   "dependencies": {
-    "@polkadot/api": "10.12.4",
-    "@polkadot/keyring": "12.6.2",
-    "axios": "1.7.2",
+    "@polkadot/api": "^12.2.1",
+    "@polkadot/keyring": "^13.0.2",
+    "axios": "^1.7.2",
     "dotenv": "^16.4.5",
-    "graphql": "16.8.1",
-    "graphql-request": "6.1.0",
-    "pino": "9.1.0",
-    "yaml": "2.4.1"
+    "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
+    "pino": "^9.1.0",
+    "yaml": "^2.4.1"
   },
   "devDependencies": {
-    "@polkadot/typegen": "^10.12.4",
-    "@polkadot/types": "^10.12.4",
+    "@polkadot/typegen": "^12.2.1",
+    "@polkadot/types": "^12.2.1",
     "@types/eslint": "^8.56.6",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.30",
