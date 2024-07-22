@@ -10,6 +10,7 @@ export type Config = {
   logLevel?: string
   dryRun: boolean
   addressToSlash?: string
+  runInBatch: boolean
 }
 
 /**
@@ -29,6 +30,7 @@ function loadConfig() {
   const addressToSlash = process.env.FORCED_ADDRESS_TO_SLASH
   const logLevel = process.env.LOG_LEVEL ?? 'info'
   const dryRun = Boolean(process.env.DRY_RUN)
+  const runInBatch = Boolean(process.env.RUN_IN_BATCH)
 
   if (!chainDecimals) {
     throw new Error('Missing CHAIN_DECIMALS')
@@ -59,6 +61,7 @@ function loadConfig() {
     balanceThreshold,
     rootMnemonic,
     dryRun,
+    runInBatch,
     addressToSlash,
   }
 }

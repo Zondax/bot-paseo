@@ -2,7 +2,7 @@ import { getConfig } from './config'
 import { logger } from './logger'
 import { ApiPromise, Keyring, WsProvider } from '@polkadot/api'
 import { getAccountsExceedingThreshold, getFilteredAmountsToSlash, loadWhitelist } from './balances'
-import { forceTransfer } from './extrinsics'
+import { forceTransfer, forceTransferBatch } from './extrinsics'
 /**
  * The main function to slash accounts with balances exceeding a specified threshold.
  * This function performs the following steps:
@@ -18,7 +18,7 @@ import { forceTransfer } from './extrinsics'
  * @returns {Promise<void>} A promise that resolves when the slashing process is complete.
  */
 export async function slashAccount(): Promise<void> {
-  const { balanceTarget, nodeUrl, balanceThreshold, rootMnemonic, addressToSlash } = getConfig()
+  const { balanceTarget, nodeUrl, balanceThreshold, rootMnemonic, addressToSlash, runInBatch } = getConfig()
   logger.info('Starting...')
   const api = await ApiPromise.create({ provider: new WsProvider(nodeUrl) })
 
@@ -52,8 +52,16 @@ export async function slashAccount(): Promise<void> {
 
   logger.trace(`Filtered amounts to slash [${JSON.stringify(filteredBalancesArray, (_, v) => (typeof v === 'bigint' ? v.toString() : v))}]`)
 
-  for (const [from, amount] of filteredBalancesArray) {
-    await forceTransfer(api, keypair, { from, amount })
+  if (!runInBatch) {
+    for (const [from, amount] of filteredBalancesArray) {
+      await forceTransfer(api, keypair, { from, amount })
+    }
+  } else {
+    await forceTransferBatch(
+      api,
+      keypair,
+      filteredBalancesArray.map(([from, amount]) => ({ from, amount })),
+    )
   }
 
   const tokensRecovered = filteredBalancesArray.reduce((sum, balance) => balance[1] + sum, 0n)
